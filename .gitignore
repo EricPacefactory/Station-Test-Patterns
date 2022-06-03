@@ -1,0 +1,11 @@
+
+# Cache files
+*.pyc
+__pycache__
+
+# Videos
+**.avi
+**.mp4
+**.mkv
+**.mp4v
+
