@@ -26,9 +26,10 @@ Other flags exist: run the script with the `-h` flag to view the other options.
 
 Below are screenshots from the output generated videos, along with brief explanations of what is included in the pattern (currently only 1 pattern, but more should be added eventually!).
 
-#### Cycle Mosaic 1
-
-<img title="" src="file:///home/wrk/Desktop/video_activity/station_example_video_creator/screenshots/cycle_mosaic_1.jpg" alt="example image" data-align="center">
+<h4 align="center">Cycle Mosaic 1</h4>
+<p align="center">
+  <img title="" src="screenshots/cycle_mosaic_1.jpg" alt="example image">
+</p>
 
 Example of *cycle mosaic 1*, which is geared towards blinking/cycling types of station patterns. It includes text patterns (1s, 5s, 15s, 60s) which blink with a period corresponding to the text (for example the 1s text toggles on/off every 0.5 seconds so that the *total* period is 1 second). There are also noisy black and white patterns as well as color cycling patterns.
 
