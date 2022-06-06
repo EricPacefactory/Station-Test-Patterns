@@ -2,6 +2,7 @@
 
 #%% Imports
 
+import argparse
 import cv2
 import numpy as np
 
@@ -12,6 +13,28 @@ from utils.video_recorder import Video_Recorder
 from utils.frame_makers import make_blank_frame, make_noise3ch_frame, make_blurred_noise3ch_frame, make_color_frame, \
                                add_gradient_noise
 
+#%% Parse script args
+
+# Create the parser
+ap = argparse.ArgumentParser(description="View/create station test pattern video")
+
+# Add the arguments
+default_length = 5
+default_output = "cycle_mosaic_1.mp4"
+ap.add_argument("-r", "--record", action = "store_true", help = "Enable video recording")
+ap.add_argument("-c", "--codec", type = str, help = "Manually set the recorded video codec (e.g. 'avc1', 'XVID', 'MJPG')")
+ap.add_argument("-l", "--length_mins", type = float, default = 5, help = "Recorded video length in minutes (default is {})".format(default_length))
+ap.add_argument("-o", "--output", type = str, default = "cycle_mosaic_1.mp4", help = "Output save path/name (default is '{}')".format(default_output))
+
+# Execute the parse_args() method
+ap_result = ap.parse_args()
+
+# For convenience
+ARG_ENABLE_RECORD = ap_result.record
+ARG_CODEC = ap_result.codec
+ARG_LENGTH_MINS = ap_result.length_mins
+ARG_OUTPUT = ap_result.output
+
 
 #%% Output config
 
@@ -19,26 +42,17 @@ from utils.frame_makers import make_blank_frame, make_noise3ch_frame, make_blurr
 frame_width = 300
 video_fps = 30.0
 
-# Set recording time (this needs to be high enough to see multiple cycles of slower patterns)
-video_length_mins = 5
-
 
 #%% Recording config
 
-enable_recording = True
-
-# Warn user of recording, in case they don't actually want to go through with it
-if enable_recording:
-    try:
-        input("Recording is enabled! Press enter to continue or CTRL + C to cancel")
-    except KeyboardInterrupt:
-        raise SystemExit("Keyboard cancel. Nothing recorded!")
-
 # Set up video recording, in case recording is enabled
-save_path = "cycle_mosaic_1.mp4"
-vwrite = Video_Recorder(save_path, video_fps, enabled = enable_recording)
-if enable_recording:
-    print("", "Recording video", "@ {}".format(save_path), sep = "\n")
+vwrite = Video_Recorder(ARG_OUTPUT, video_fps, enabled = ARG_ENABLE_RECORD, codec = ARG_CODEC)
+
+# Some user feedback
+if ARG_ENABLE_RECORD:
+    print("",
+          "Recording video (codec: {})".format(vwrite.get_codec()),
+          "@ {}".format(vwrite.get_save_path()), sep = "\n")
 
 
 #%% Config for display areas
@@ -148,7 +162,7 @@ brightness_frame = make_color_frame(next(brightness_bgrs), *color_wh)
 timer = Square_Wave_Timer()
 
 # *** Video loop ***
-total_frames = int(round(video_fps * video_length_mins * 60))
+total_frames = int(round(video_fps * ARG_LENGTH_MINS * 60))
 for k in range(total_frames):
     
     # Update toggle timers
